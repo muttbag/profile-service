@@ -8,8 +8,7 @@ pipeline {
   stages {
     stage('Initialise') {
       steps {
-        sh '''mvn clean
-service docker start'''
+        sh 'mvn clean'
       }
     }
 
