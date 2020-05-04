@@ -1,0 +1,59 @@
+pipeline {
+
+  environment {
+    registry = "mrmartyn05/telecom"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+
+  }
+  
+  agent any
+  
+  stages {
+    
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/muttbag/telecom-provider.git'
+      }
+    }
+    
+    stage('Copy artifact'){
+      steps {
+          copyArtifacts fingerprintArtifacts: true, projectName: 'test7/master', selector: lastSuccessful(), target: '$WORKSPACE'
+      }        
+    }
+    
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    
+    stage('Remove Unused docker image') {
+        steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+    }
+}
+    stage('Deploy Stack') {
+      steps {
+            script {
+                echo "Deploying Container Stack to Docker Cluster"
+                sh "ansible-playbook $WORKSPACE/ansible/update_docker_swarm.yml --extra-vars \"PROJECT=telecom DOCKER_USER=mrmartyn05 DOCKER_PASSWORD=dinton4785\" -vvv"
+            }
+          }
+      }
+    }
+
+  }
