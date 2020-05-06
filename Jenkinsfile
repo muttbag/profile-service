@@ -26,13 +26,9 @@ pipeline {
 
     stage('Archive') {
       steps {
-        archiveArtifacts 'application/target/*.jar'
+        archiveArtifacts 'target/*.jar'
       }
     }
 
-  }
-  environment {
-    registry = 'gustavoapolinario/docker-test'
-    registryCredential = 'dockerhub'
   }
 }
