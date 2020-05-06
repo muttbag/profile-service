@@ -1,7 +1,7 @@
 ---
 services:
   telecom:
-    image: mrmartyn05/equipment-service
+    image: mrmartyn05/profile-service
     ports:
       - "8081:8081"
 version: "3.1"

@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    registry = "mrmartyn05/telecom"
+    registry = "mrmartyn05/profile-service"
     registryCredential = 'dockerhub'
     dockerImage = ''
 
@@ -13,13 +13,13 @@ pipeline {
     
     stage('Cloning Git') {
       steps {
-        git 'https://github.com/muttbag/telecom-provider.git'
+        git 'https://github.com/muttbag/profile-service.git'
       }
     }
     
     stage('Copy artifact'){
       steps {
-          copyArtifacts fingerprintArtifacts: true, projectName: 'test7/master', selector: lastSuccessful(), target: '$WORKSPACE'
+          copyArtifacts fingerprintArtifacts: true, projectName: 'profile-service-build/master', selector: lastSuccessful(), target: '$WORKSPACE'
       }        
     }
     
@@ -50,7 +50,7 @@ pipeline {
       steps {
             script {
                 echo "Deploying Container Stack to Docker Cluster"
-                sh "ansible-playbook $WORKSPACE/ansible/update_docker_swarm.yml --extra-vars \"PROJECT=telecom DOCKER_USER=mrmartyn05 DOCKER_PASSWORD=dinton4785\" -vvv"
+                sh "ansible-playbook $WORKSPACE/ansible/update_docker_swarm.yml --extra-vars \"PROJECT=telecom DOCKER_USER=mrmartyn05 DOCKER_PASSWORD=F4i&t7ME6Es!Hr8b$cjKto!wQV*1LI\" -vvv"
             }
           }
       }
