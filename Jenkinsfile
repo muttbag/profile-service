@@ -31,8 +31,4 @@ pipeline {
     }
 
   }
-  environment {
-    registry = 'gustavoapolinario/docker-test'
-    registryCredential = 'dockerhub'
-  }
 }
