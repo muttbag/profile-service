@@ -19,12 +19,34 @@ pipeline {
     
     stage('Copy artifact'){
       steps {
-          copyArtifacts fingerprintArtifacts: true, projectName: 'profile-service-build/master', selector: lastSuccessful(), target: '$WORKSPACE'
+          //copyArtifacts fingerprintArtifacts: true, projectName: 'profile-service-build/master', selector: lastSuccessful(), target: '$WORKSPACE'
+		  copyArtifacts(projectName: 'profile-service-build/master', selector: lastSuccessful(), target:'/tmp');
+
       }        
     }
     
     stage('Building image') {
       steps{
+	  script {
+
+               def foldersList = []
+
+               def osName = isUnix() ? "UNIX" : "WINDOWS"
+               echo "osName: " + osName
+
+               echo ".... JENKINS_HOME: ${JENKINS_HOME}"
+
+               if(isUnix()) {
+                 def output = sh returnStdout: true, script: "ls -l ${WORKSPACE} | grep ^d | awk '{print \$9}'"
+                 foldersList = output.tokenize('\n').collect() { it }
+               } else {
+                 def output = bat returnStdout: true, script: "dir \"${JENKINS_HOME}\" /b /A:D"
+                 foldersList = output.tokenize('\n').collect() { it }
+                 foldersList = foldersList.drop(2)
+
+               }
+               echo ".... " + foldersList
+			   }
         script {
           dockerImage = docker.build(registry + ":$BUILD_NUMBER", 'docker/')
         }
