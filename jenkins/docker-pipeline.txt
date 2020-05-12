@@ -19,7 +19,6 @@ pipeline {
     
     stage('Copy artifact'){
       steps {
-          //copyArtifacts fingerprintArtifacts: true, projectName: 'profile-service-build/master', selector: lastSuccessful(), target: '$WORKSPACE'
 		  copyArtifacts(projectName: 'profile-service-build/master', selector: lastSuccessful());
 
       }        
@@ -50,12 +49,19 @@ pipeline {
 }
     stage('Deploy Stack') {
       steps {
+	  withCredentials([
+              usernamePassword(
+                  credentialsId: 'dockerhub',
+                  usernameVariable: 'DOCKER_USER',
+                  passwordVariable: 'DOCKER_PASSWORD'
+              )
+          ]){
             script {
                 echo "Deploying Container Stack to Docker Cluster"
-                sh "ansible-playbook $WORKSPACE/ansible/update_docker_swarm.yml --extra-vars \"PROJECT=telecom DOCKER_USER=mrmartyn05 DOCKER_PASSWORD=F4i&t7ME6Es!Hr8b$cjKto!wQV*1LI\" -vvv"
+                sh "ansible-playbook $WORKSPACE/ansible/update_docker_swarm.yml --extra-vars \"PROJECT=profile-service DOCKER_USER=mrmartyn05 DOCKER_PASSWORD=${env.DOCKER_PASSWORD}\" -vvv"
             }
           }
       }
     }
-
+}
   }

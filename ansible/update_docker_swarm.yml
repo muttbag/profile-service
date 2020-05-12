@@ -35,7 +35,7 @@
 
     - name: Deploy Docker Stack
       shell: >
-        docker stack deploy -c /opt/{{ PROJECT }}/profile-service-compose.yml telecom --with-registry-auth
+        docker stack deploy -c /opt/{{ PROJECT }}/profile-service-compose.yml profile-service --with-registry-auth
       become: true
       become_user: root
       tags: docker-swarm-deploy

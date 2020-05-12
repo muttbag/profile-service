@@ -3,6 +3,6 @@ services:
   telecom:
     image: mrmartyn05/profile-service
     ports:
-      - "8081:8081"
+      - "8082:8082"
 version: "3.1"
 
