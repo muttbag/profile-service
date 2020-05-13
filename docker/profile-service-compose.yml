@@ -1,6 +1,6 @@
 ---
 services:
-  telecom:
+  profile:
     image: mrmartyn05/profile-service
     ports:
       - "8082:8082"
